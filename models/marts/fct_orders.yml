@@ -5,17 +5,61 @@ models:
       - dbt_utils.expression_is_true:
           arguments:
             expression: "order_total >= 0"
+
+    # --- Semantic Layer ---
+    semantic_model:
+      enabled: true
+      name: orders
+    agg_time_dimension: order_date
+
     columns:
       - name: order_id
         description: Primary key.
         data_tests: [unique, not_null]
+        entity:
+          type: primary
+          name: order
       - name: customer_id
         data_tests:
           - relationships:
               arguments:
                 to: ref('dim_customers')
                 field: customer_id
+        entity:
+          type: foreign
+          name: customer
+      - name: order_date
+        granularity: day
+        dimension:
+          type: time
+      - name: order_status
+        dimension:
+          type: categorical
       - name: order_total
         description: Items plus shipping, in dollars.
       - name: is_completed
         description: True when the order was delivered and not returned or cancelled.
+
+    metrics:
+      - name: revenue
+        label: Revenue
+        description: Sum of order totals (items + shipping) for completed orders.
+        type: simple
+        agg: sum
+        expr: order_total
+        filter: |
+          {{ Dimension('order__order_status') }} = 'completed'
+      - name: completed_orders
+        label: Completed orders
+        description: Number of completed orders.
+        type: simple
+        agg: sum
+        expr: 1
+        filter: |
+          {{ Dimension('order__order_status') }} = 'completed'
+      - name: average_order_value
+        label: Average order value
+        description: Revenue divided by completed orders.
+        type: ratio
+        numerator: revenue
+        denominator: completed_orders
