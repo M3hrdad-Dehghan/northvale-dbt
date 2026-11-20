@@ -1,0 +1,9 @@
+province_code,province_name,region
+ON,Ontario,Central
+QC,Quebec,Central
+BC,British Columbia,West
+AB,Alberta,West
+MB,Manitoba,West
+SK,Saskatchewan,West
+NS,Nova Scotia,Atlantic
+NB,New Brunswick,Atlantic
