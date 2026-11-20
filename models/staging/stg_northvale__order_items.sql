@@ -12,8 +12,9 @@ renamed as (
         sku                                                         as product_sku,
         upper(trim(category_code))                                  as category_code,
         quantity,
-        cast(unit_price_cents / 100.0 as decimal(16, 2))            as unit_price,
-        cast(quantity * unit_price_cents / 100.0 as decimal(16, 2)) as line_amount
+        {{ cents_to_dollars('unit_price_cents') }}                  as unit_price,
+        {{ cents_to_dollars('quantity * unit_price_cents') }}       as line_amount
+
     from source
 
 )
