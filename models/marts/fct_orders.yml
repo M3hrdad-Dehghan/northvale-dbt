@@ -1,0 +1,21 @@
+models:
+  - name: fct_orders
+    description: One row per order with amounts in dollars and how it was paid.
+    data_tests:
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "order_total >= 0"
+    columns:
+      - name: order_id
+        description: Primary key.
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: order_total
+        description: Items plus shipping, in dollars.
+      - name: is_completed
+        description: True when the order was delivered and not returned or cancelled.
