@@ -1,0 +1,43 @@
+models:
+  - name: stg_northvale__customers
+    description: Customers, cleaned. One row per customer.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: email
+        data_tests: [not_null]
+
+  - name: stg_northvale__orders
+    description: Orders, cleaned. Amounts in dollars, status in lower case.
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_northvale__customers')
+                field: customer_id
+      - name: order_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['placed', 'shipped', 'completed', 'returned', 'cancelled']
+
+  - name: stg_northvale__order_items
+    description: Order lines. line_amount = quantity x unit_price.
+    columns:
+      - name: order_item_id
+        data_tests: [unique, not_null]
+
+  - name: stg_northvale__payments
+    description: Payment attempts, including failed ones.
+    columns:
+      - name: payment_id
+        data_tests: [unique, not_null]
+      - name: payment_method
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['credit_card', 'paypal', 'apple_pay', 'gift_card']
