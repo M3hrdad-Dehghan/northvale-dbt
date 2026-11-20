@@ -1,0 +1,13 @@
+sources:
+  - name: northvale
+    description: Raw CSV exports from the Northvale shop, uploaded to Databricks.
+    schema: northvale_raw
+    tables:
+      - name: raw_customers
+        description: One row per customer account.
+      - name: raw_orders
+        description: One row per order. Status text is not clean (mixed case, spaces).
+      - name: raw_order_items
+        description: One row per product line in an order. Prices are in cents.
+      - name: raw_payments
+        description: One row per payment attempt, including failed ones. Amounts are in cents.
