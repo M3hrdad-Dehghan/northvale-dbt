@@ -1,15 +1,20 @@
-Welcome to your new dbt project!
+# Northvale analytics (dbt + Databricks)
 
-### Using the starter project
+A small, complete dbt project for a simulated online shop, Northvale.
+Built in the dbt platform (Studio IDE) on Databricks, one branch and one pull request per step.
 
-Try running the following commands:
-- dbt run
-- dbt test
+## Features used
+- sources, staging / intermediate / marts layers
+- seeds (product_categories, provinces)
+- a macro (cents_to_dollars) and a Jinja loop (payment-method pivot)
+- package dbt_utils
+- materializations: view, table, incremental
+- tests: unique, not_null, accepted_values, relationships, dbt_utils.expression_is_true, one singular test
+- Semantic Layer: 2 semantic models, 5 metrics, daily time spine
 
-
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [dbt community](https://getdbt.com/community) to learn from other analytics engineers
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+## Run
+```
+dbt deps
+dbt build
+dbt sl query --metrics revenue --group-by metric_time__month
+```
