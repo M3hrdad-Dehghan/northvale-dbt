@@ -1,15 +1,50 @@
 models:
   - name: dim_customers
     description: One row per customer, with region and completed-order history.
+
+    # --- Semantic Layer ---
+    semantic_model:
+      enabled: true
+      name: customers
+    agg_time_dimension: signup_date
+
     columns:
       - name: customer_id
         description: Primary key.
         data_tests: [unique, not_null]
+        entity:
+          type: primary
+          name: customer
+      - name: signup_date
+        granularity: day
+        dimension:
+          type: time
       - name: region
         description: Sales region from the provinces seed.
         data_tests: [not_null]
+        dimension:
+          type: categorical
+      - name: province_name
+        dimension:
+          type: categorical
       - name: customer_type
         data_tests:
           - accepted_values:
               arguments:
                 values: ['repeat', 'one-time', 'no orders']
+        dimension:
+          type: categorical
+
+    metrics:
+      - name: new_customers
+        label: New customers
+        description: Customers who signed up in the period.
+        type: simple
+        agg: count_distinct
+        expr: customer_id
+      - name: repeat_customers
+        label: Repeat customers
+        description: Customers with two or more completed orders.
+        type: simple
+        agg: sum
+        expr: case when number_of_orders >= 2 then 1 else 0 end

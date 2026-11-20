@@ -1,0 +1,8 @@
+models:
+  - name: time_spine_daily
+    description: One row per day. The Semantic Layer uses it to group metrics by day, week or month.
+    time_spine:
+      standard_granularity_column: date_day
+    columns:
+      - name: date_day
+        granularity: day
