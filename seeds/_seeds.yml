@@ -1,0 +1,11 @@
+seeds:
+  - name: product_categories
+    description: Category code -> name and department. Maintained by the merchandising team.
+    columns:
+      - name: category_code
+        data_tests: [unique, not_null]
+  - name: provinces
+    description: Canadian province code -> name and sales region.
+    columns:
+      - name: province_code
+        data_tests: [unique, not_null]
